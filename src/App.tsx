@@ -20,8 +20,16 @@ class App extends Component<AppProps, AppState> {
     };
   }
 
+  componentDidMount() {
+    this.handleSearch(this.state.searchTerm);
+  }
+
   handleSearch = async (searchTerm: string) => {
-    const animalList = await fetchAnimalList(searchTerm);
+    const trimmedSearchTerm = searchTerm.trim();
+    const animalList = await fetchAnimalList(searchTerm.trim());
+    this.setState({ searchTerm: trimmedSearchTerm }, () => {
+      localStorage.setItem('searchTerm', trimmedSearchTerm);
+    });
     console.log(animalList);
   };
 

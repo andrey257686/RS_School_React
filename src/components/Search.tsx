@@ -21,20 +21,21 @@ class Search extends Component<SearchProps, SearchState> {
     this.setState({ searchTerm: event.target.value });
   };
 
-  handleSearch = async () => {
+  handleSearch = async (event: React.FormEvent) => {
+    event.preventDefault();
     this.props.onSearch(this.state.searchTerm);
   };
 
   render() {
     return (
-      <div>
+      <form onSubmit={this.handleSearch}>
         <input
           type="text"
           value={this.state.searchTerm}
           onChange={this.handleSearchTermChange}
         />
-        <button onClick={this.handleSearch}>Search</button>
-      </div>
+        <button type="submit">Search</button>
+      </form>
     );
   }
 }
