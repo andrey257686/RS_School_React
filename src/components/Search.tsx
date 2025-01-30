@@ -1,18 +1,28 @@
 import { Component } from 'react';
-import { fetchAnimalList } from '../services/api';
 
-class Search extends Component {
-  state = {
-    searchTerm: '',
-  };
+type SearchProps = {
+  initialSearchTerm: string;
+  onSearch: (searchTerm: string) => void;
+};
+
+type SearchState = {
+  searchTerm: string;
+};
+
+class Search extends Component<SearchProps, SearchState> {
+  constructor(props: SearchProps) {
+    super(props);
+    this.state = {
+      searchTerm: props.initialSearchTerm,
+    };
+  }
 
   handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchTerm: event.target.value });
   };
 
   handleSearch = async () => {
-    const animalList = await fetchAnimalList(this.state.searchTerm);
-    console.log(animalList);
+    this.props.onSearch(this.state.searchTerm);
   };
 
   render() {
