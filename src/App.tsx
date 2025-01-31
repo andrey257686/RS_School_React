@@ -36,6 +36,7 @@ class App extends Component<object, AppState> {
     this.setState({ searchTerm: trimmedSearchTerm }, () => {
       localStorage.setItem('searchTerm', trimmedSearchTerm);
     });
+    this.setState({ results: animalList });
     console.log(animalList);
   };
 
@@ -46,7 +47,7 @@ class App extends Component<object, AppState> {
           initialSearchTerm={this.state.searchTerm}
           onSearch={this.handleSearch}
         />
-        <CardList />
+        <CardList items={this.state.results} />
       </div>
     );
   }
