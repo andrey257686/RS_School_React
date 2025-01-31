@@ -4,19 +4,18 @@ import styles from './App.module.scss';
 import Search from './components/Search';
 import CardList from './components/CardList';
 import Loader from './components/Loader';
+import ApiError from './components/ApiError';
 
 import { STSpacecraft } from './types/types';
 
-import {
-  // fetchAnimalList,
-  // fetchCharacterList,
-  fetchSpacecraftList,
-} from './services/api';
+import { fetchSpacecraftList } from './services/api';
 
 interface AppState {
   searchTerm: string;
   results: STSpacecraft[];
   isLoading: boolean;
+  emulatingError: boolean;
+  apiError: boolean;
 }
 
 class App extends Component<object, AppState> {
@@ -27,6 +26,8 @@ class App extends Component<object, AppState> {
       searchTerm: savedSearchTerm,
       results: [],
       isLoading: false,
+      emulatingError: false,
+      apiError: false,
     };
   }
 
@@ -37,17 +38,30 @@ class App extends Component<object, AppState> {
   handleSearch = async (searchTerm: string) => {
     this.setState({ isLoading: true });
     const trimmedSearchTerm = searchTerm.trim();
-    const animalList = await fetchSpacecraftList(searchTerm.trim());
-    // console.log('here');
-    this.setState({ searchTerm: trimmedSearchTerm }, () => {
-      localStorage.setItem('searchTerm', trimmedSearchTerm);
-    });
-    this.setState({ results: animalList, isLoading: false });
+    try {
+      const animalList = await fetchSpacecraftList(trimmedSearchTerm);
+      this.setState({ results: animalList, isLoading: false });
+      this.setState({ searchTerm: trimmedSearchTerm }, () => {
+        localStorage.setItem('searchTerm', trimmedSearchTerm);
+      });
+    } catch (error) {
+      console.error(error);
+      this.setState({ apiError: true, isLoading: false });
+    }
+  };
 
-    console.log(animalList);
+  handleThrowApiError = () => {
+    this.setState({ apiError: true });
+  };
+
+  handleThrowError = () => {
+    this.setState({ emulatingError: true });
   };
 
   render() {
+    if (this.state.emulatingError) {
+      throw new Error('Emulated error');
+    }
     return (
       <div>
         <Search
@@ -56,8 +70,14 @@ class App extends Component<object, AppState> {
         />
         <div className={styles.results}>
           <h2>RESULTS</h2>
+          <div className={styles.results_buttons}>
+            <button onClick={this.handleThrowError}>Throw error</button>
+            <button onClick={this.handleThrowApiError}>Throw API Error</button>
+          </div>
           {this.state.isLoading ? (
             <Loader />
+          ) : this.state.apiError ? (
+            <ApiError />
           ) : (
             <CardList items={this.state.results} />
           )}
