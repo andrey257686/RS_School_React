@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, ChangeEvent, FormEvent } from 'react';
 import styles from './Search.module.scss';
 
 interface SearchProps {
@@ -18,11 +18,11 @@ class Search extends Component<SearchProps, SearchState> {
     };
   }
 
-  handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handleSearchTermChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchTerm: event.target.value });
   };
 
-  handleSearch = async (event: React.FormEvent) => {
+  handleSearch = async (event: FormEvent) => {
     event.preventDefault();
     this.props.onSearch(this.state.searchTerm);
   };
