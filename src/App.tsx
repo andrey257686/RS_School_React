@@ -3,20 +3,26 @@ import { Component } from 'react';
 import Search from './components/Search';
 import CardList from './components/CardList';
 
-import { fetchAnimalList } from './services/api';
+import { STSpacecraft } from './types/types';
 
-type AppProps = object;
+import {
+  // fetchAnimalList,
+  // fetchCharacterList,
+  fetchSpacecraftList,
+} from './services/api';
 
-type AppState = {
+interface AppState {
   searchTerm: string;
-};
+  results: STSpacecraft[];
+}
 
-class App extends Component<AppProps, AppState> {
-  constructor(props: AppProps) {
+class App extends Component<object, AppState> {
+  constructor(props: object) {
     super(props);
     const savedSearchTerm = localStorage.getItem('searchTerm') || '';
     this.state = {
       searchTerm: savedSearchTerm,
+      results: [],
     };
   }
 
@@ -26,7 +32,7 @@ class App extends Component<AppProps, AppState> {
 
   handleSearch = async (searchTerm: string) => {
     const trimmedSearchTerm = searchTerm.trim();
-    const animalList = await fetchAnimalList(searchTerm.trim());
+    const animalList = await fetchSpacecraftList(searchTerm.trim());
     this.setState({ searchTerm: trimmedSearchTerm }, () => {
       localStorage.setItem('searchTerm', trimmedSearchTerm);
     });

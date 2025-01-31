@@ -1,13 +1,13 @@
 import { Component } from 'react';
 
-type SearchProps = {
+interface SearchProps {
   initialSearchTerm: string;
   onSearch: (searchTerm: string) => void;
-};
+}
 
-type SearchState = {
+interface SearchState {
   searchTerm: string;
-};
+}
 
 class Search extends Component<SearchProps, SearchState> {
   constructor(props: SearchProps) {
