@@ -36,7 +36,7 @@ class App extends Component<object, AppState> {
   }
 
   handleSearch = async (searchTerm: string) => {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, apiError: false, emulatingError: false });
     const trimmedSearchTerm = searchTerm.trim();
     try {
       const animalList = await fetchSpacecraftList(trimmedSearchTerm);
@@ -64,6 +64,7 @@ class App extends Component<object, AppState> {
     }
     return (
       <div>
+        <h1 className={styles.title}>STARTREK Spacecraft Search</h1>
         <Search
           initialSearchTerm={this.state.searchTerm}
           onSearch={this.handleSearch}
